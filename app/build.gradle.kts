@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    id("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
 }
@@ -29,6 +30,10 @@ android {
             )
         }
     }
+    buildFeatures{
+        dataBinding=true
+        viewBinding=true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -54,8 +59,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    //toast
     implementation (libs.motiontoast)
+    //gson
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+
 
 }
