@@ -9,7 +9,7 @@ import kotlin.time.Duration
 class MotionToastUtil @Inject constructor() {
 
     fun showSuccessToast(activity: Activity, message: String, duration: Long=MotionToast.LONG_DURATION)  {
-        MotionToast.createToast(
+        MotionToast.createColorToast(
             activity,
             "Success",
             message,
@@ -21,7 +21,7 @@ class MotionToastUtil @Inject constructor() {
 
     }
     fun showFailureToast(activity:Activity,message: String,duration: Long=MotionToast.LONG_DURATION) {
-        MotionToast.createToast(
+        MotionToast.createColorToast(
 
             activity,
             "Failed",

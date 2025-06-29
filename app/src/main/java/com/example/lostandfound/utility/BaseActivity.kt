@@ -1,8 +1,9 @@
 package com.example.lostandfound.utility
 
+import androidx.appcompat.app.AppCompatActivity
 import javax.inject.Inject
 
-open class BaseActivity {
+open class BaseActivity:AppCompatActivity() {
 
 
     @Inject
