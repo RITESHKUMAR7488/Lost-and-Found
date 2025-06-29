@@ -32,4 +32,5 @@ class OnBoardingViewModel @Inject constructor(private val repository: OnBoarding
             _login.value=it
         }
     }
+
 }
