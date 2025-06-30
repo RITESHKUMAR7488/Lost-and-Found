@@ -1,16 +1,22 @@
 package com.example.lostandfound.mainModule.uis
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import com.example.lostandfound.R
 import com.example.lostandfound.databinding.ActivityCreateCommunityBinding
+import com.example.lostandfound.databinding.DialogCommunityCodeBinding
 import com.example.lostandfound.mainModule.models.CommunityModel
 import com.example.lostandfound.mainModule.viewModels.MainViewModel
 import com.example.lostandfound.utility.BaseActivity
@@ -92,20 +98,8 @@ class CreateCommunity : BaseActivity() {
                     binding.progressBar.visibility = View.GONE
                     binding.btnCreateCommunity.isEnabled = true
 
-                    motionToastUtil.showSuccessToast(
-                        this,
-                        "Community created successfully!",
-                        duration = MotionToast.LONG_DURATION
-                    )
-
-                    // Show the community code to user
-                    motionToastUtil.showInfoToast(
-                        this,
-                        "Community Code: ${communityModel.communityCode}",
-                        duration = MotionToast.LONG_DURATION
-                    )
-
-                    finish()
+                    // Show custom dialog with community code
+                    showCommunityCodeDialog(communityModel)
                 }
                 is UiState.Failure -> {
                     binding.progressBar.visibility = View.GONE
@@ -120,5 +114,59 @@ class CreateCommunity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun showCommunityCodeDialog(communityModel: CommunityModel) {
+        val dialogBinding = DataBindingUtil.inflate<DialogCommunityCodeBinding>(
+            LayoutInflater.from(this),
+            R.layout.dialog_community_code,
+            null,
+            false
+        )
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .setCancelable(false)
+            .create()
+
+        // Make dialog background transparent to show custom card background
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        with(dialogBinding) {
+            // Set community data
+            tvCommunityName.text = communityModel.communityName
+            tvCommunityCode.text = communityModel.communityCode
+
+            // Close button click
+            btnClose.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+
+            // Copy button click
+            btnCopy.setOnClickListener {
+                copyToClipboard(communityModel.communityCode ?: "")
+            }
+
+            // Done button click
+            btnDone.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun copyToClipboard(text: String) {
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Community Code", text)
+        clipboardManager.setPrimaryClip(clipData)
+
+        motionToastUtil.showSuccessToast(
+            this,
+            "Community code copied to clipboard!",
+            duration = MotionToast.SHORT_DURATION
+        )
     }
 }
