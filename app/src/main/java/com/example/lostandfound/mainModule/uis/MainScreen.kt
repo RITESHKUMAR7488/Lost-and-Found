@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.lostandfound.R
 import androidx.databinding.DataBindingUtil
 import com.example.lostandfound.databinding.ActivityMainBinding
 import com.example.lostandfound.databinding.ActivityMainScreenBinding
