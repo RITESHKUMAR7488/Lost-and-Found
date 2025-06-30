@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.lostandfound.databinding.ActivityMainBinding
 import com.example.lostandfound.databinding.ActivityMainScreenBinding
 import com.example.lostandfound.mainModule.uis.CreateCommunity
+import com.example.lostandfound.mainModule.uis.JoinCommunity
 
 import com.example.lostandfound.utility.BaseActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -48,12 +49,12 @@ class MainScreen : BaseActivity() {
         with(bottomSheetBinding) {
             btnCreateCommunity.setOnClickListener {
                 bottomSheetDialog.dismiss()
-//                startActivity(Intent(this@MainActivity, CreateCommunity::class.java))
+                startActivity(Intent(this@MainScreen, CreateCommunity::class.java))
             }
 
             btnJoinCommunity.setOnClickListener {
                 bottomSheetDialog.dismiss()
-//                startActivity(Intent(this@MainActivity, JoinCommunity::class.java))
+                startActivity(Intent(this@MainScreen, JoinCommunity::class.java))
             }
         }
 

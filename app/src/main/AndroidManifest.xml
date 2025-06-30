@@ -16,17 +16,14 @@
         android:theme="@style/Theme.LostAndFound"
         tools:targetApi="31">
         <activity
+            android:name=".mainModule.uis.JoinCommunity"
+            android:exported="false" />
+        <activity
             android:name=".mainModule.uis.CreateCommunity"
             android:exported="false" />
         <activity
             android:name=".mainModule.uis.MainScreen"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".onBoardingModule.uis.RegisterActivity"
             android:exported="false" />
@@ -35,9 +32,13 @@
             android:exported="false" />
         <activity
             android:name=".onBoardingModule.uis.LandingActivity"
-            android:exported="false"/>
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />

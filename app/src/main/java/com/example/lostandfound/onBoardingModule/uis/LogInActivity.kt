@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.lostandfound.MainActivity
 import com.example.lostandfound.R
 import com.example.lostandfound.databinding.ActivityLogInBinding
+import com.example.lostandfound.mainModule.uis.MainScreen
 import com.example.lostandfound.onBoardingModule.viewModels.OnBoardingViewModel
 import com.example.lostandfound.utility.BaseActivity
 import com.example.lostandfound.utility.UiState
@@ -59,7 +60,7 @@ class LogInActivity : BaseActivity() {
                                 binding.progressBar.visibility = View.GONE
                                 binding.txt.visibility = View.VISIBLE
                                 preferenceManager.isLoggedIn=true
-                                startActivity(Intent(this@LogInActivity,MainActivity::class.java))
+                                startActivity(Intent(this@LogInActivity,MainScreen::class.java))
                                 finish()
                             }
                             is UiState.Failure -> {

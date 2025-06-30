@@ -1,5 +1,6 @@
 package com.example.lostandfound.onBoardingModule.uis
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.lostandfound.R
 import com.example.lostandfound.databinding.ActivityRegisterBinding
+import com.example.lostandfound.mainModule.uis.MainScreen
 import com.example.lostandfound.onBoardingModule.models.UserModel
 import com.example.lostandfound.onBoardingModule.viewModels.OnBoardingViewModel
 import com.example.lostandfound.utility.BaseActivity
@@ -90,6 +92,9 @@ class RegisterActivity : BaseActivity() {
                             "Registration Successfull",
                             duration = MotionToast.SHORT_DURATION
                         )
+                        startActivity(Intent(this@RegisterActivity, MainScreen::class.java))
+                        finish()
+
 
                     }
                 }

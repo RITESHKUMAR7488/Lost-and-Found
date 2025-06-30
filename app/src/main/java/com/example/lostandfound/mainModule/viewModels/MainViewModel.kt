@@ -10,15 +10,28 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: MainRepository):ViewModel() {
+class MainViewModel @Inject constructor(private val repository: MainRepository) : ViewModel() {
+
     fun createCommunity(
-        userId:String,
+        userId: String,
         model: CommunityModel,
-    ):LiveData<UiState<CommunityModel>>{
-        val successData=MutableLiveData<UiState<CommunityModel>>()
-        successData.value=UiState.Loading
-        repository.createCommunity(userId,model){
-            successData.value=it
+    ): LiveData<UiState<CommunityModel>> {
+        val successData = MutableLiveData<UiState<CommunityModel>>()
+        successData.value = UiState.Loading
+        repository.createCommunity(userId, model) {
+            successData.value = it
+        }
+        return successData
+    }
+
+    fun joinCommunity(
+        userId: String,
+        communityCode: String
+    ): LiveData<UiState<String>> {
+        val successData = MutableLiveData<UiState<String>>()
+        successData.value = UiState.Loading
+        repository.joinCommunity(userId, communityCode) {
+            successData.value = it
         }
         return successData
     }
