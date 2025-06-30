@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.okhttp)
     implementation (libs.androidx.swiperefreshlayout)
+    implementation(libs.glide)
 
 
 

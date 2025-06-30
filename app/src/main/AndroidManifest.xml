@@ -16,6 +16,12 @@
         android:theme="@style/Theme.LostAndFound"
         tools:targetApi="31">
         <activity
+            android:name=".mainModule.uis.ReportMissingItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mainModule.uis.CommunityDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".mainModule.uis.JoinCommunity"
             android:exported="false" />
         <activity
@@ -23,7 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".mainModule.uis.MainScreen"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".onBoardingModule.uis.RegisterActivity"
             android:exported="false" />
@@ -32,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".onBoardingModule.uis.LandingActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
