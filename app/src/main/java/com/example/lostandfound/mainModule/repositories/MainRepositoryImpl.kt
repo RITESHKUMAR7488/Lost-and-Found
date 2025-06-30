@@ -1,10 +1,10 @@
 package com.example.lostandfound.mainModule.repositories
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.lostandfound.mainModule.interfaces.ImageUploadApi
 import com.example.lostandfound.mainModule.models.CommunityModel
 import com.example.lostandfound.mainModule.models.ImageUploadResponse
+import com.example.lostandfound.mainModule.models.MissingItemModel
 import com.example.lostandfound.mainModule.models.UserCommunityModel
 import com.example.lostandfound.utility.Constant
 import com.example.lostandfound.utility.UiState
@@ -196,12 +196,43 @@ class MainRepositoryImpl(
             }
         })
     }
-    override fun uploadImage(
-        imageFile: File,  // File to upload
-        apiKey: String,   // API key
-        data: MutableLiveData<ImageUploadResponse>,
-        error: MutableLiveData<Throwable>
+
+    // ✅ Fixed: Added missing reportMissingItem method
+    override fun reportMissingItem(
+        missingItem: MissingItemModel,
+        result: (UiState<MissingItemModel>) -> Unit
     ) {
+        result.invoke(UiState.Loading)
+
+        val missingItemsRef = realtimeDatabase.getReference(Constant.MISSING_ITEMS)
+        val itemId = missingItem.itemId ?: missingItemsRef.push().key
+
+        if (itemId == null) {
+            result.invoke(UiState.Failure("Failed to generate item ID"))
+            return
+        }
+
+        missingItem.itemId = itemId
+
+        missingItemsRef.child(itemId).setValue(missingItem)
+            .addOnSuccessListener {
+                Log.d("ReportMissingItem", "Missing item reported successfully")
+                result.invoke(UiState.Success(missingItem))
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ReportMissingItem", "Failed to report missing item", exception)
+                result.invoke(UiState.Failure(exception.localizedMessage ?: "Failed to report missing item"))
+            }
+    }
+
+    // ✅ Improved: Better implementation for uploadImage
+    override fun uploadImage(
+        imageFile: File,
+        apiKey: String,
+        result: (UiState<ImageUploadResponse>) -> Unit
+    ) {
+        result.invoke(UiState.Loading)
+
         // Create a RequestBody for the image file
         val requestBody = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
         val imagePart = MultipartBody.Part.createFormData("source", imageFile.name, requestBody)
@@ -213,25 +244,18 @@ class MainRepositoryImpl(
                     call: Call<ImageUploadResponse>,
                     response: Response<ImageUploadResponse>
                 ) {
-                    Log.d("responsess", "Image uploaded successfully: ${response.body()}")
                     if (response.isSuccessful && response.body() != null) {
-                        // Successfully received response
-                        data.value = response.body()
-                        Log.d(
-                            "responsess",
-                            "Image uploaded successfully: ${response.body()?.image?.url}"
-                        )
+                        Log.d("ImageUpload", "Image uploaded successfully: ${response.body()?.image?.url}")
+                        result.invoke(UiState.Success(response.body()!!))
                     } else {
-                        // Handle unsuccessful response
-                        Log.d("responsess", "Failed: ${response.message()}")
-                        data.value = null
+                        Log.e("ImageUpload", "Upload failed: ${response.message()}")
+                        result.invoke(UiState.Failure("Upload failed: ${response.message()}"))
                     }
                 }
 
                 override fun onFailure(call: Call<ImageUploadResponse>, t: Throwable) {
-                    // Handle failure (e.g., network error)
-                    error.value = t
-                    Log.d("responsess", "Failed to upload image: ${t.message}")
+                    Log.e("ImageUpload", "Failed to upload image: ${t.message}")
+                    result.invoke(UiState.Failure("Failed to upload image: ${t.message}"))
                 }
             })
     }

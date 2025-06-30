@@ -19,23 +19,32 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class MainModule {
+
     @Provides
     @Singleton
     fun provideMainRepository(
         firestore: FirebaseFirestore,
         auth: FirebaseAuth,
-        imageUploadApi:ImageUploadApi,
+        imageUploadApi: ImageUploadApi,
         realtimeDatabase: FirebaseDatabase
-    ):MainRepository{
-        return MainRepositoryImpl(firestore,auth, imageUploadApi,realtimeDatabase)
+    ): MainRepository {
+        return MainRepositoryImpl(firestore, auth, imageUploadApi, realtimeDatabase)
     }
+
     @Singleton
     @Provides
-    @Named("ImageUploadRetrofit") // ✅ Naming the Retrofit instance for image upload
+    @Named("ImageUploadRetrofit")
     fun provideRetroFit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constant.BASE_URL_IMAGE_UPLOAD)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    // ✅ Fixed: Added missing ImageUploadApi provider
+    @Singleton
+    @Provides
+    fun provideImageUploadApi(@Named("ImageUploadRetrofit") retrofit: Retrofit): ImageUploadApi {
+        return retrofit.create(ImageUploadApi::class.java)
     }
 }

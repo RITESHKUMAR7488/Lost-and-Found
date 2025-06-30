@@ -77,11 +77,9 @@ class MainScreen : BaseActivity() {
             Log.d("MainScreen", "Communities state: $state")
             when (state) {
                 is UiState.Loading -> {
-
-                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.swipeRefreshLayout.isRefreshing = true
                 }
                 is UiState.Success -> {
-
                     binding.swipeRefreshLayout.isRefreshing = false
 
                     if (state.data.isEmpty()) {
@@ -94,7 +92,6 @@ class MainScreen : BaseActivity() {
                     }
                 }
                 is UiState.Failure -> {
-
                     binding.swipeRefreshLayout.isRefreshing = false
 
                     motionToastUtil.showFailureToast(
@@ -109,17 +106,10 @@ class MainScreen : BaseActivity() {
     }
 
     private fun onCommunityClick(community: UserCommunityModel) {
-        // Handle community click - navigate to community details
-        motionToastUtil.showInfoToast(
-            this,
-            "Clicked on ${community.communityName}",
-            duration = MotionToast.SHORT_DURATION
-        )
-
-        // TODO: Navigate to community details screen
-        // val intent = Intent(this, CommunityDetailsActivity::class.java)
-        // intent.putExtra("community", community)
-        // startActivity(intent)
+        // ✅ Fixed: Navigate to community details screen
+        val intent = Intent(this, CommunityDetailsActivity::class.java)
+        intent.putExtra("community", community)
+        startActivity(intent)
     }
 
     private fun showBottomSheetDialog() {
