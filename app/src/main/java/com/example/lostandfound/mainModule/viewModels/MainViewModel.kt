@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.lostandfound.mainModule.models.CommunityModel
+import com.example.lostandfound.mainModule.models.UserCommunityModel
 import com.example.lostandfound.mainModule.repositories.MainRepository
 import com.example.lostandfound.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +32,17 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
         val successData = MutableLiveData<UiState<String>>()
         successData.value = UiState.Loading
         repository.joinCommunity(userId, communityCode) {
+            successData.value = it
+        }
+        return successData
+    }
+
+    fun getUserCommunities(
+        userId: String
+    ): LiveData<UiState<List<UserCommunityModel>>> {
+        val successData = MutableLiveData<UiState<List<UserCommunityModel>>>()
+        successData.value = UiState.Loading
+        repository.getUserCommunities(userId) {
             successData.value = it
         }
         return successData

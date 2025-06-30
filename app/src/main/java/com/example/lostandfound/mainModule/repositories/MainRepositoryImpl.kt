@@ -1,7 +1,11 @@
 package com.example.lostandfound.mainModule.repositories
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import com.example.lostandfound.mainModule.interfaces.ImageUploadApi
 import com.example.lostandfound.mainModule.models.CommunityModel
+import com.example.lostandfound.mainModule.models.ImageUploadResponse
+import com.example.lostandfound.mainModule.models.UserCommunityModel
 import com.example.lostandfound.utility.Constant
 import com.example.lostandfound.utility.UiState
 import com.google.firebase.auth.FirebaseAuth
@@ -10,10 +14,18 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
 
 class MainRepositoryImpl(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
+    private val imageUploadApi: ImageUploadApi,
     private val realtimeDatabase: FirebaseDatabase
 ) : MainRepository {
 
@@ -137,6 +149,89 @@ class MainRepositoryImpl(
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("JoinCommunity", "Database error", error.toException())
                     result.invoke(UiState.Failure(error.message))
+                }
+            })
+    }
+
+    override fun getUserCommunities(
+        userId: String,
+        result: (UiState<List<UserCommunityModel>>) -> Unit
+    ) {
+        result.invoke(UiState.Loading)
+
+        val userCommunitiesRef = realtimeDatabase.getReference(Constant.MY_COMMUNITIES)
+            .child(userId)
+
+        userCommunitiesRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val communities = mutableListOf<UserCommunityModel>()
+
+                for (communitySnapshot in snapshot.children) {
+                    try {
+                        val communityData = communitySnapshot.value as? HashMap<*, *>
+                        if (communityData != null) {
+                            val community = UserCommunityModel(
+                                communityId = communityData["communityId"] as? String,
+                                communityName = communityData["communityName"] as? String,
+                                role = communityData["role"] as? String,
+                                joinedAt = (communityData["joinedAt"] as? Number)?.toLong()
+                            )
+                            communities.add(community)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("GetUserCommunities", "Error parsing community data", e)
+                    }
+                }
+
+                // Sort communities by joined date (newest first)
+                communities.sortByDescending { it.joinedAt }
+
+                result.invoke(UiState.Success(communities))
+                Log.d("GetUserCommunities", "Retrieved ${communities.size} communities")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("GetUserCommunities", "Database error", error.toException())
+                result.invoke(UiState.Failure(error.message))
+            }
+        })
+    }
+    override fun uploadImage(
+        imageFile: File,  // File to upload
+        apiKey: String,   // API key
+        data: MutableLiveData<ImageUploadResponse>,
+        error: MutableLiveData<Throwable>
+    ) {
+        // Create a RequestBody for the image file
+        val requestBody = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+        val imagePart = MultipartBody.Part.createFormData("source", imageFile.name, requestBody)
+
+        // Make the API call
+        imageUploadApi.uploadImage(apiKey, action = "upload", image = imagePart)
+            .enqueue(object : Callback<ImageUploadResponse> {
+                override fun onResponse(
+                    call: Call<ImageUploadResponse>,
+                    response: Response<ImageUploadResponse>
+                ) {
+                    Log.d("responsess", "Image uploaded successfully: ${response.body()}")
+                    if (response.isSuccessful && response.body() != null) {
+                        // Successfully received response
+                        data.value = response.body()
+                        Log.d(
+                            "responsess",
+                            "Image uploaded successfully: ${response.body()?.image?.url}"
+                        )
+                    } else {
+                        // Handle unsuccessful response
+                        Log.d("responsess", "Failed: ${response.message()}")
+                        data.value = null
+                    }
+                }
+
+                override fun onFailure(call: Call<ImageUploadResponse>, t: Throwable) {
+                    // Handle failure (e.g., network error)
+                    error.value = t
+                    Log.d("responsess", "Failed to upload image: ${t.message}")
                 }
             })
     }

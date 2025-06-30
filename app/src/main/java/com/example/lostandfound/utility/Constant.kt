@@ -17,4 +17,5 @@ object Constant {
     const val USER_MODEL="UserModel"
     const val TOKEN_ID="token"
     const val COMMENTS = "comments"
+    const val BASE_URL_IMAGE_UPLOAD="https://freeimage.host"
 }
