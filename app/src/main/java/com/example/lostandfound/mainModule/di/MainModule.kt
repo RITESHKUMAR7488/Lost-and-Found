@@ -1,5 +1,6 @@
 package com.example.lostandfound.mainModule.di
 
+import com.example.lostandfound.mainModule.interfaces.ImageUploadApi
 import com.example.lostandfound.mainModule.repositories.MainRepository
 import com.example.lostandfound.mainModule.repositories.MainRepositoryImpl
 import com.example.lostandfound.utility.Constant
@@ -23,9 +24,10 @@ class MainModule {
     fun provideMainRepository(
         firestore: FirebaseFirestore,
         auth: FirebaseAuth,
+        imageUploadApi:ImageUploadApi,
         realtimeDatabase: FirebaseDatabase
     ):MainRepository{
-        return MainRepositoryImpl(firestore,auth,realtimeDatabase)
+        return MainRepositoryImpl(firestore,auth, imageUploadApi,realtimeDatabase)
     }
     @Singleton
     @Provides
