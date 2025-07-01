@@ -87,7 +87,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@android:color/lighter_gray">
+                        android:background="@color/lighter_gray">
 
                         <ImageView
                             android:layout_width="48dp"
