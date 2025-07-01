@@ -64,13 +64,18 @@ class CommunityDetailsActivity : BaseActivity() {
             }
 
             btnSeeMissingItems.setOnClickListener {
-                // TODO: Navigate to see missing items screen
-                motionToastUtil.showInfoToast(
+                val intent = Intent(this@CommunityDetailsActivity, MissingItemsListActivity::class.java)
+                intent.putExtra("community", community)
+                startActivity(intent)
+
+                motionToastUtil.showSuccessToast(
                     this@CommunityDetailsActivity,
-                    "See Missing Items - Coming Soon",
+                    "Item Found",
                     duration = MotionToast.SHORT_DURATION
                 )
             }
+
+
 
             btnBack.setOnClickListener {
                 finish()

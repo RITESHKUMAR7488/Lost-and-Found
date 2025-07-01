@@ -31,7 +31,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCommunityCode"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:layout_marginHorizontal="24dp"
                 android:hint="Community Code"
                 android:inputType="textCapCharacters"
                 android:textColor="@android:color/black"
@@ -47,6 +48,7 @@
                 android:id="@+id/btnJoinCommunity"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_marginHorizontal="24dp"
                 android:text="Join Community"
                 android:textColor="@android:color/white"
                 android:backgroundTint="@android:color/holo_green_dark"

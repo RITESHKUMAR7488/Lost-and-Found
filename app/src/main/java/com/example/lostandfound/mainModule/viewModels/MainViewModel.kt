@@ -81,4 +81,14 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
 
         return result
     }
+    fun getMissingItems(
+        communityId: String
+    ): LiveData<UiState<List<MissingItemModel>>> {
+        val result = MutableLiveData<UiState<List<MissingItemModel>>>()
+        repository.getMissingItems(communityId) { state ->
+            result.value = state
+        }
+        return result
+    }
+
 }

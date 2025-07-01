@@ -22,4 +22,6 @@ interface MainRepository {
         apiKey: String,
         result: (UiState<ImageUploadResponse>) -> Unit
     )
+    fun getMissingItems(communityId: String, result: (UiState<List<MissingItemModel>>) -> Unit)
+
 }

@@ -259,4 +259,32 @@ class MainRepositoryImpl(
                 }
             })
     }
+    override fun getMissingItems(
+        communityId: String,
+        result: (UiState<List<MissingItemModel>>) -> Unit
+    ) {
+        result.invoke(UiState.Loading)
+
+        val missingItemsRef = realtimeDatabase.getReference(Constant.MISSING_ITEMS)
+        missingItemsRef.orderByChild("communityId").equalTo(communityId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val missingItems = mutableListOf<MissingItemModel>()
+                    for (itemSnapshot in snapshot.children) {
+                        val item = itemSnapshot.getValue(MissingItemModel::class.java)
+                        if (item != null) {
+                            missingItems.add(item)
+                        }
+                    }
+                    result.invoke(UiState.Success(missingItems))
+                    Log.d("GetMissingItems", "Retrieved ${missingItems.size} missing items")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("GetMissingItems", "Database error", error.toException())
+                    result.invoke(UiState.Failure(error.message))
+                }
+            })
+    }
+
 }

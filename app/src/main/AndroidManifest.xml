@@ -7,9 +7,7 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.telephony"
-        android:required="false" />
-
-    <!-- Permissions -->
+        android:required="false" /> <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,12 +15,11 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- Removed WRITE_INTERNAL_STORAGE (not a valid permission) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Removed WRITE_INTERNAL_STORAGE (not a valid permission) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
-    <!-- above: WRITE_EXTERNAL_STORAGE is only meaningful up to API 28 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" /> <!-- above: WRITE_EXTERNAL_STORAGE is only meaningful up to API 28 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -43,6 +40,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LostAndFound"
         tools:targetApi="31">
+        <activity
+            android:name=".mainModule.uis.MissingItemDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mainModule.uis.MissingItemsListActivity"
+            android:exported="false" />
         <activity
             android:name=".mainModule.uis.ReportMissingItemActivity"
             android:exported="false" />
