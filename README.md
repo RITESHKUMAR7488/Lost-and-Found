@@ -43,7 +43,6 @@ A mobile application designed to help users quickly report and locate lost items
 - Push notifications for immediate alerts
 
 ## 📸 Screenshots
-```markdown
 ![Screenshot 2024-07-26 092914](https://github.com/user-attachments/assets/1bffd38e-66a6-4f3a-83a4-b180b1a8b572)
 
 
